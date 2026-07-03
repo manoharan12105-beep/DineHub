@@ -1,5 +1,5 @@
 package Class;
 
-public class Deliveryperson {
+public class DeliveryPerson {
   
 }
