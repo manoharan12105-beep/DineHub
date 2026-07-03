@@ -13,7 +13,7 @@ public class User {
   private LocalDateTime createdAt;
 
   /**
-   * Admin Register Method
+   * User Register Method
    * @param id
    * @param username
    * @param email
@@ -31,7 +31,7 @@ public class User {
   }
 
   /**
-   * Admin Login Method
+   * User Login Method
    * @param users
    * @param email
    * @param password
@@ -41,7 +41,7 @@ public class User {
     User user = null;
 
     for(User u : users) {
-      if(u.getEmail().equals(email) && u.getRole().equals("ADMIN")) {
+      if(u.getEmail().equals(email)) {
         user = u;
       }
     }
@@ -85,7 +85,5 @@ public class User {
   public String getPassword() {
     return password;
   }
-
-  
 
 }
