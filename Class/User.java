@@ -12,6 +12,7 @@ public class User {
   private Role role;
   private LocalDateTime createdAt;
 
+  
   /**
    * User Register Method
    * @param id
@@ -29,6 +30,8 @@ public class User {
 
     return true;
   }
+
+
 
   /**
    * User Login Method
