@@ -2,6 +2,7 @@ package Class;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import DTO.UserResponse;
 import enums.Role;
 
 public class User {
@@ -11,6 +12,14 @@ public class User {
   private String password;
   private Role role;
   private LocalDateTime createdAt;
+
+  List<User> userList = null;
+
+
+
+  public User(List<User> userList) {
+    this.userList = userList;
+  }
 
   
   /**
@@ -40,10 +49,10 @@ public class User {
    * @param password
    * @return
    */
-  public boolean login (List<User> users, String email, String password) {
+  public boolean login (String email, String password) {
     User user = null;
 
-    for(User u : users) {
+    for(User u : userList) {
       if(u.getEmail().equals(email)) {
         user = u;
       }
@@ -61,6 +70,31 @@ public class User {
     }
   }
 
+
+
+  /**
+   * Gives User profile
+   * @param userId
+   * @return
+   */
+  public UserResponse getProfile(long userId) {
+    User user = null;
+
+    for(User u : userList) {
+      if(u.getId() == userId) {
+        user = u;
+      }
+    }
+    if(user == null)
+      return null;
+
+    UserResponse userResponse = new UserResponse(user.getId(), user.getUsername(), user.getEmail(), user.getRole(), user.getCreatedAt());
+    return userResponse;
+  }
+
+
+
+  
 
 
   // ================== Getters ================== //
