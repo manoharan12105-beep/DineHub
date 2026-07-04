@@ -2,6 +2,7 @@ package Class;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import DTO.UserRequest;
 import DTO.UserResponse;
 import enums.Role;
 
@@ -30,12 +31,17 @@ public class User {
    * @param role
    * @return
    */
-  public boolean register(long id, String username, String email, Role role) {
-    this.id = id;
-    this.username = username;
-    this.email = email;
-    this.role = role;
-    this.createdAt = LocalDateTime.now();
+  public boolean register(long id, String username, String email, String password, Role role) {
+    try {
+      this.id = id;
+      this.username = username;
+      this.email = email;
+      this.password = password;
+      this.role = role;
+      this.createdAt = LocalDateTime.now();
+    } catch (Exception e) {
+      return false;
+    }
 
     return true;
   }
@@ -44,7 +50,6 @@ public class User {
 
   /**
    * User Login Method
-   * @param users
    * @param email
    * @param password
    * @return
@@ -72,19 +77,28 @@ public class User {
 
 
 
+  // Get User by Id 
+  private User getById(long userId) {
+    User user = null;
+    for(User u : userList) {
+      if(u.getId() == userId) {
+        user = u;
+        break;
+      }
+    }
+
+    return user;
+  }
+
+
+
   /**
    * Gives User profile
    * @param userId
    * @return
    */
   public UserResponse getProfile(long userId) {
-    User user = null;
-
-    for(User u : userList) {
-      if(u.getId() == userId) {
-        user = u;
-      }
-    }
+    User user = getById(userId);
     if(user == null)
       return null;
 
@@ -94,10 +108,40 @@ public class User {
 
 
 
+  // Admin method
+  public boolean updateProfile(long userid, UserRequest req) {
+    try {
+      User user = getById(userid);
+      user.setPassword(req.getPassword());
+      user.setUsername(req.getUsername());
+      user.setRole(req.getRole());
+    } catch (Exception e) {
+      return false;
+    }
+
+    return true;
+
+  }
+
+
+  // Admin method
+  public boolean deleteAccount(long userId) {
+    try {
+      User user = getById(userId);
+      userList.remove(user);
+    } catch (Exception e) {
+      return false;
+    }
+
+    return true;
+  }
+
+
+
   
 
 
-  // ================== Getters ================== //
+  // ================== Getters and Setters ================== //
 
   public long getId() {
     return id;
@@ -121,6 +165,30 @@ public class User {
 
   public String getPassword() {
     return password;
+  }
+
+  public void setId(long id) {
+    this.id = id;
+  }
+
+
+  public void setUsername(String username) {
+    this.username = username;
+  }
+
+
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
+
+  public void setPassword(String password) {
+    this.password = password;
+  }
+
+
+  public void setRole(Role role) {
+    this.role = role;
   }
 
 }
