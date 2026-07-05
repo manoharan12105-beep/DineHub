@@ -22,7 +22,15 @@ public class User {
     this.userList = userList;
   }
 
-  
+  public User(long id, String username, String email, String password, Role role) {
+    this.id = id;
+    this.username = username;
+    this.email = email;
+    this.password = password;
+    this.role = role;
+    this.createdAt = LocalDateTime.now();
+  }
+
   /**
    * User Register Method
    * @param id
@@ -104,7 +112,7 @@ public class User {
       User user = getById(userid);
       user.setPassword(req.getPassword());
       user.setUsername(req.getUsername());
-      user.setRole(req.getRole());
+      //user.setRole(req.getRole());
     } catch (Exception e) {
       return false;
     }

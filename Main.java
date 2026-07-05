@@ -13,6 +13,7 @@ import Class.Restaurant;
 import Class.RestaurantManager;
 import Class.RestaurantRating;
 import Class.User;
+import DTO.UserRequest;
 import DTO.UserResponse;
 import enums.Role;
 
@@ -67,7 +68,7 @@ public class Main {
   
   // ======================================== Logged in Customer methods ======================================== //
   public static void customerMethods() {
-    System.out.println("place holder (role.Userr)" );
+    System.out.println("place holder (role.User)" );
   }
 
 
@@ -75,16 +76,21 @@ public class Main {
   public static void adminMethods() {
 
     while(true) {
-      System.out.println("1. Add Admin");
-      System.out.println("2. Update User");
-      System.out.println("3. Delete User");
-      System.out.println("4. Add Restaurant");
-      System.out.println("5. Delete Restaurant");
-      System.out.println("6. Add Delivery Person");
-      System.out.println("7. Remove Delivery Person");
-      System.out.println("8. View Profile");
+      System.out.println();
+      System.out.println("===================================");
+      System.out.println("             Admin Menu            ");
+      System.out.println("===================================");
+      System.out.println("1. View Profile");
+      System.out.println("2. Add Admin");
+      System.out.println("3. Update User");
+      System.out.println("4. Delete User");
+      System.out.println("5. Add Restaurant");
+      System.out.println("6. Delete Restaurant");
+      System.out.println("7. Add Delivery Person");
+      System.out.println("8. Remove Delivery Person");
       System.out.println("9. LogOut");
       System.out.println();
+      System.out.print("Enter choice :");
 
       int choice = 0;
       try {
@@ -94,9 +100,33 @@ public class Main {
         continue;
       }
 
+      Admin admin = new Admin(userList, adminList);
+      User user = new User(userList);
       switch (choice) {
-        // Add admin
+        // View profile
         case 1 : {
+          System.out.print("Enter User id :");
+          long id = Long.parseLong(scanner.nextLine());
+          UserResponse userDetail = user.getProfile(id);
+          if (userDetail != null) {
+            System.out.println();
+            System.out.println("User Id   : " + userDetail.getId());
+            System.out.println("Username  : " + userDetail.getUsername());
+            System.out.println("Email     : " + userDetail.getEmail());
+            System.out.println("Role      : " + userDetail.getRole());
+            System.out.println("Created at: " + userDetail.getCreatedAt());
+            System.out.println();
+          } else {
+            System.out.println("No user found with id " + id);
+          }
+
+
+          break;
+        }
+
+
+        // Add admin
+        case 2 : {
           System.out.print("Enter Admin name : ");
           String adName = scanner.nextLine();
           System.out.print("Enter Admin email : ");
@@ -108,12 +138,12 @@ public class Main {
           System.out.print("Enter Contact Number : ");
           String adContactNo = scanner.nextLine();
 
-          Admin admin = new Admin(userList, adminList);
+        
           admin.setAdminId(adminId++);
-          admin.setName("Manoharan");
-          admin.setEmail("manoharan@gmail.com");
-          admin.setAge(21);
-          admin.setContactNo("+91 9876543210");
+          admin.setName(adName);
+          admin.setEmail(adEmail);
+          admin.setAge(adAge);
+          admin.setContactNo(adContactNo);
           admin.setUserId(userId++);
 
           if(admin.addAdmin(admin, pass)) {
@@ -124,6 +154,80 @@ public class Main {
 
           break;
         }
+
+        // Update User
+        case 3 : {
+          System.out.println();
+          System.out.print("Enter User id to Update :");
+          long id = Long.parseLong(scanner.nextLine());
+          System.out.print("Enter Username : ");
+          String name = scanner.nextLine();
+          System.out.println("Enter Password : ");
+          String pass = scanner.nextLine();
+          
+          if(user.updateProfile(id, new UserRequest(name, pass, null))) {
+            System.out.println("User profile with User Id " + id + " has been Successfully updated");
+          } else {
+            System.out.println("Something went wrong...");
+          }
+           
+          break;
+        }
+
+        // Delete user 
+        case 4 : {
+          System.out.println();
+          System.out.print("Enter User id to Delete : ");
+          long id = Long.parseLong(scanner.nextLine());
+
+          if(user.deleteAccount(id)) {
+            System.out.println("User with User Id " + id + " has been deleted");
+          } else {
+            System.out.println("Something went wrong...");
+          }
+
+          break;
+        }
+
+        // Add Restaurant
+        case 5 : {
+          System.out.println("Placeholder : add restaurant");
+
+          break;
+        }
+
+        // Delete Restaurant
+        case 6 : {
+          System.out.println("Placeholder : delete restaurant");
+
+          break;
+        }
+
+        // Add Delivery Person
+        case 7 : {
+          System.out.println("Placeholder : Add DeliveryPerson");
+
+          break;
+        }
+
+        // Remove Delivery Person
+        case 8 : {
+          System.out.println("Placeholder : Remove DeliveryPerson");
+
+          break;
+        }
+
+        case 9 : {
+          loggedIn = null;
+          System.out.println("Logged out Successfully");
+          break;
+        }
+
+        default : {
+          System.out.println("Enter Valid Choice");
+          break;
+        }
+
       }
 
 
@@ -133,19 +237,22 @@ public class Main {
 
   // ============================================ Logged in RestaurantManager Methods ============================================ //
   public static void restaurantManagerMethods () {
-
+    System.out.println("place holder (role.RestaurantManager)" );
   }
 
 
   // ============================================   Logged in DeliveryPerson Methods  ============================================ //
   public static void deliveryPersonMethods () {
-
+    System.out.println("place holder (role.DeliveryPerson)" );
   }
   
 // ========================================================= Main Method ========================================================= //
 
   public static void main(String[] args) {
     Main mainObj = new Main();
+
+    System.out.println(userList.toString());
+    System.out.println(adminList.toString());
 
     System.out.println("===================================");
     System.out.println("   Welcome to DineHub Food System  ");
@@ -184,7 +291,7 @@ public class Main {
 
           if (user.register(userId++, username, email, password, Role.CUSTOMER)) {
             System.out.println();
-            System.out.println("Registered [Name : " + username + ", Role : " + user.getRole() + "]" );
+            System.out.println("Registered [Name : " + username + ", Role : CUSTOMER]" );
           } else {
             System.out.println("Register Failed...");;
           }
