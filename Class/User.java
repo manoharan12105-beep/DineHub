@@ -33,16 +33,17 @@ public class User {
    */
   public boolean register(long id, String username, String email, String password, Role role) {
     try {
-      this.id = id;
-      this.username = username;
-      this.email = email;
-      this.password = password;
-      this.role = role;
-      this.createdAt = LocalDateTime.now();
+      User newUser = new User(this.userList);
+      newUser.id = id;
+      newUser.username = username;
+      newUser.email = email;
+      newUser.password = password;
+      newUser.role = role;
+      newUser.createdAt = LocalDateTime.now();
+      userList.add(newUser);
     } catch (Exception e) {
       return false;
     }
-
     return true;
   }
 
@@ -54,25 +55,14 @@ public class User {
    * @param password
    * @return
    */
-  public boolean login (String email, String password) {
-    User user = null;
-
-    for(User u : userList) {
-      if(u.getEmail().equals(email)) {
-        user = u;
-      }
+  public UserResponse login(String email, String password) {
+    for (User u : userList) {
+        if(email.equals(u.getEmail()) && password.equals(u.getPassword())) {
+            return new UserResponse(u.getId(), u.getUsername(), u.getEmail(), u.getRole(), u.getCreatedAt());
+        }
     }
 
-    if(user == null) {
-      return false;
-      // System.out.println("Invalid email id");
-    }
-
-    if(user.getPassword().equals(password)) {
-      return true;
-    } else {
-      return false;
-    }
+    return null;
   }
 
 

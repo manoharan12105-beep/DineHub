@@ -67,7 +67,7 @@ public class Main {
   
   // ======================================== Logged in Customer methods ======================================== //
   public static void customerMethods() {
-
+    System.out.println("place holder (role.Userr)" );
   }
 
 
@@ -152,10 +152,13 @@ public class Main {
     System.out.println("===================================");
 
     while (true) {
+      System.out.println();
       System.out.println("1.Register");
       System.out.println("2.Login");
       System.out.println("3.LogOut");
       System.out.println("4.Exit");
+      System.out.println();
+      System.out.print("Enter your choice : ");
 
       int choice1 = 0;
       try {
@@ -173,14 +176,15 @@ public class Main {
           System.out.print("Enter Username : ");
           String username = scanner.nextLine();
 
-          System.out.print("Enter Email :  ");
+          System.out.print("Enter Email    : ");
           String email = scanner.nextLine();
 
           System.out.print("Enter Password : ");
           String password = scanner.nextLine();
 
           if (user.register(userId++, username, email, password, Role.CUSTOMER)) {
-            System.out.println("Registered");
+            System.out.println();
+            System.out.println("Registered [Name : " + username + ", Role : " + user.getRole() + "]" );
           } else {
             System.out.println("Register Failed...");;
           }
@@ -192,24 +196,26 @@ public class Main {
         case 2 : {
           System.out.print("Enter Email : ");
           String email = scanner.nextLine();
+          System.out.print("Enter Password : ");
           String password = scanner.nextLine();
 
-          if(user.login(email, password)) {
-            System.out.println("Login Successful");
-            loggedIn = user.getProfile(user.getId());
+          UserResponse loggedInUser = user.login(email, password);
+          if(loggedInUser != null) {
+              System.out.println("Login Successful");
+              loggedIn = loggedInUser;
 
-            Role currentRole = loggedIn.getRole();
-            if(currentRole.equals(Role.CUSTOMER)) {
-              customerMethods();
-            } else if(currentRole.equals(Role.ADMIN)) {
-              adminMethods();
-            } else if(currentRole.equals(Role.RESTAURANT_MANAGER)) {
-              restaurantManagerMethods();
-            } else if(currentRole.equals(Role.DELIVERY_PERSON)) {
-              deliveryPersonMethods();
-            }
+              Role currentRole = loggedIn.getRole();
+              if(currentRole == Role.CUSTOMER) {
+                customerMethods();
+              } else if(currentRole == Role.ADMIN) {
+                adminMethods();
+              } else if(currentRole == Role.RESTAURANT_MANAGER) {
+                restaurantManagerMethods();
+              } else if(currentRole == Role.DELIVERY_PERSON) {
+                deliveryPersonMethods();
+              }
           } else {
-            System.out.println("Invalid credentional");
+              System.out.println("Invalid credentials");
           }
 
           break;
@@ -218,11 +224,14 @@ public class Main {
         // Logout Method
         case 3 : {
           loggedIn = null;
+          System.out.println("Logged out Successfully");
           break;
         }
 
         case 4 : {
-          System.out.println("Thank you for using DineHub");
+          System.out.println("===================================");
+          System.out.println("    Thank you for using DineHub    ");
+          System.out.println("===================================");
           return;
         }
         default: {
