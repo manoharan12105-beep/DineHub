@@ -68,7 +68,75 @@ public class Main {
   
   // ======================================== Logged in Customer methods ======================================== //
   public static void customerMethods() {
-    System.out.println("place holder (role.User)" );
+    
+    while(true) {
+      System.out.println();
+      System.out.println("===================================");
+      System.out.println("           Customer Menu           ");
+      System.out.println("===================================");
+      System.out.println("1.Account Settings"); // update, delete.
+      System.out.println("2. View Food List");
+      System.out.println("3. Place Order");
+      System.out.println("4. Cancel Order");
+      System.out.println("5. View Order histroy");
+      System.out.println("6. Favourites");      // View, add, remove.
+      System.out.println("7. Logout");
+      System.out.print("Enter choice :");
+
+      int choice = 0;
+      try {
+        choice = Integer.parseInt(scanner.nextLine());
+      } catch (Exception e) {
+        System.out.println("Enter valid choice...");
+        continue;
+      }
+
+
+      switch(choice) {
+        
+        // Customer Account Settings
+        case 1 : {
+          System.out.println();
+          System.out.println("===================================");
+          System.out.println("          Account Setting          ");
+          System.out.println("===================================");
+          System.out.println("1. Update Account");
+          System.out.println("2. Delete Account");
+          System.out.print("Enter a choice :");
+
+          int choice1 = 0;
+          try {
+            choice1 = Integer.parseInt(scanner.nextLine());
+          } catch (Exception e) {
+            System.out.println("Enter valid choice...");
+            continue;
+          }
+
+          switch(choice1) {
+            //  Update Customer Details
+            case 1 : {
+              long userId = loggedIn.getId();
+              Customer customer = null;
+
+              for(Customer c : customerList) {
+                if(c.getUserId() == userId) {
+                  customer = c;
+                  break;
+                }
+              }
+              System.out.println("===== Enter Update Details =====");
+              System.out.println("Enter name :");
+              String name = scanner.nextLine();
+              System.out.println("Enter email :");
+              String email = scanner.nextLine();
+              System.out.println("Enter age :");
+              int age = Integer.parseInt(scanner.nextLine());
+
+            }
+          }
+        }
+      }
+    }
   }
 
 
@@ -251,14 +319,15 @@ public class Main {
   public static void main(String[] args) {
     Main mainObj = new Main();
 
-    System.out.println(userList.toString());
-    System.out.println(adminList.toString());
-
     System.out.println("===================================");
     System.out.println("   Welcome to DineHub Food System  ");
     System.out.println("===================================");
 
     while (true) {
+      System.out.println(userList.toString());
+      System.out.println(adminList.toString());
+      System.out.println(customerList.toString());
+
       System.out.println();
       System.out.println("1.Register");
       System.out.println("2.Login");
@@ -289,7 +358,7 @@ public class Main {
           System.out.print("Enter Password : ");
           String password = scanner.nextLine();
 
-          if (user.register(userId++, username, email, password, Role.CUSTOMER)) {
+          if (user.register(userId++, customerId++, username, email, password, Role.CUSTOMER, customerList)) {
             System.out.println();
             System.out.println("Registered [Name : " + username + ", Role : CUSTOMER]" );
           } else {

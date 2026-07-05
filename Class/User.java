@@ -39,7 +39,7 @@ public class User {
    * @param role
    * @return
    */
-  public boolean register(long id, String username, String email, String password, Role role) {
+  public boolean register(long id, long customerId, String username, String email, String password, Role role, List<Customer> customerList) {
     try {
       User newUser = new User(this.userList);
       newUser.id = id;
@@ -48,6 +48,8 @@ public class User {
       newUser.password = password;
       newUser.role = role;
       newUser.createdAt = LocalDateTime.now();
+      Customer customer = new Customer(customerList);
+      customer.create(customerId, newUser, customerList);
       userList.add(newUser);
     } catch (Exception e) {
       return false;
