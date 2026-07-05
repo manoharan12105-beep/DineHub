@@ -30,21 +30,21 @@ public class Admin {
 
   // Add Admin
   public boolean addAdmin(Admin ad, String password) {
-    Admin admin = ad;
     try {
-      User user = new User(userList);
-      user.register(admin.getUserId(), admin.getName(), admin.getEmail(), password, Role.ADMIN);
+      User user = new User(ad.getUserId(), ad.getName(), ad.getEmail(), password, Role.ADMIN);
+
       userList.add(user);
-      adminList.add(admin);
+      adminList.add(ad);
+      return true;
     } catch (Exception e) {
       return false;
     }
-
-    return true;
   }
 
-  
 
+
+
+  
 
   // ========================================== Getters and Setters ==========================================
   public long getAdminId() {
