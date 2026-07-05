@@ -26,7 +26,7 @@ public class Food {
     this.price=price;
   }
 
-  
+
     public String create(Food food){
        foodList.add(food);
        return "Food as Added";
@@ -81,6 +81,46 @@ public class Food {
         }
     }
      return "not found";
+    }
+
+
+    public Long getFoodId() {
+        return foodId;
+    }
+
+
+    public String getName() {
+        return Name;
+    }
+
+
+    public String getDescription() {
+        return description;
+    }
+
+
+    public int getTimetoprepareMinute() {
+        return timetoprepareMinute;
+    }
+
+
+    public Category getCategory() {
+        return category;
+    }
+
+
+    public boolean isAvailability() {
+        return availability;
+    }
+
+
+    public Double getPrice() {
+        return price;
+    }
+
+
+    public List<Food> getFoodList() {
+        return foodList;
     }
 
 

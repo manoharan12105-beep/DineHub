@@ -71,4 +71,36 @@ public class Restaurant {
         System.out.print(order);
        }
     }
+
+    public Long getRestaurantId() {
+        return restaurantId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public LocalDateTime getStartedAt() {
+        return startedAt;
+    }
+
+    public Long getRestaurantManagerId() {
+        return restaurantManagerId;
+    }
+
+    public List<Restaurant> getRestaurantList() {
+        return restaurantList;
+    }
+
+    public List<Food> getFoodList() {
+        return foodList;
+    }
+
+    public List<Orders> getOrderList() {
+        return orderList;
+    }
 }
