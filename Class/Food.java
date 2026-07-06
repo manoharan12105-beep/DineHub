@@ -9,27 +9,35 @@ public class Food {
   Long foodId;
   private String Name;
   private String description;
-  private int timetoprepareMinute;
+  private int timeToPrepareMinute;
   private Category category;
   private boolean availability;
   private Double price;
 
 
-  List<Food> foodList = new ArrayList<>();
-  Food(Long foodId,String Name,String description,int timetoprepareMinute,Category category, boolean availability,Double price){
-    this .foodId=foodId;
-    this.Name=Name;
-    this.description=description;
-    this.timetoprepareMinute=timetoprepareMinute;
-    this.category=category;
-    this.availability=availability;
-    this.price=price;
+  List<Food> foodList = null;
+  public Food(List<Food> foodList){
+    this.foodList = foodList;
   }
 
 
-    public String create(Food food){
-       foodList.add(food);
-       return "Food as Added";
+    public boolean create(Long foodId,String Name,String description,int timeToPrepareMinute,Category category, boolean availability,Double price){
+        try {
+            this.foodId=foodId;
+            this.Name=Name;
+            this.description=description;
+            this.timeToPrepareMinute=timeToPrepareMinute;
+            this.category=category;
+            this.availability=availability;
+            this.price=price;
+
+            // add the food obj in main class;
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+
+        
     }
 
 
@@ -100,7 +108,7 @@ public class Food {
 
 
     public int getTimetoprepareMinute() {
-        return timetoprepareMinute;
+        return timeToPrepareMinute;
     }
 
 
@@ -122,9 +130,5 @@ public class Food {
     public List<Food> getFoodList() {
         return foodList;
     }
-
-
-
-
 
 }

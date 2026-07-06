@@ -10,23 +10,25 @@ public class Customer {
   private int age;
   private String contactNo;
   private String gender;
-  private String address;
+  private int[] address = new int[2];
   private long userId;
 
   List<Customer> customerList = null;
+  private String[][] cityMap;
   static Scanner scanner = new Scanner(System.in);
 
-  public Customer(List<Customer> customerList) {
+  public Customer(List<Customer> customerList, String[][] cityMap) {
     this.customerList = customerList;
+    this.cityMap = cityMap;
   }
   
 
   /**
    * Create and add Customer
    */
-  public boolean create(long customerId, User user, List<Customer> customerList) {
+  public boolean create(long customerId, User user) {
     try {
-      Customer customer = new Customer(this.customerList);
+      Customer customer = new Customer(this.customerList, this.cityMap);
       customer.userId = user.getId();
       customer.name = user.getUsername();
       customer.email = user.getEmail();
@@ -41,15 +43,28 @@ public class Customer {
       System.out.print("Enter Contact No : ");
       customer.contactNo = scanner.nextLine();
 
-      System.out.print("Enter Address :");
-      customer.address = scanner.nextLine();
+      System.out.print("Enter Address (x y): ");
+      String[] input = scanner.nextLine().trim().split("\\s+");
 
-      customerList.add(customer);
+      int[] address = {
+        Integer.parseInt(input[0]),
+        Integer.parseInt(input[1])
+      };
+
+      customer.setAddress(address);
+      String locationName = "C" + customer.getId();
+      placeOnMap(customer.getAddress(), locationName);
+      this.customerList.add(customer);
 
       return true;
     } catch (Exception e) {
+      e.printStackTrace();
       return false;
     }
+  }
+
+  public void placeOnMap(int[] address, String locationName) {
+    cityMap[address[0]][address[1]] = locationName;
   }
 
 
@@ -113,12 +128,12 @@ public class Customer {
   }
 
 
-  public String getAddress() {
+  public int[] getAddress() {
     return address;
   }
 
 
-  public void setAddress(String address) {
+  public void setAddress(int[] address) {
     this.address = address;
   }
 

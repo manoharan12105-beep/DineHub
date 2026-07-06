@@ -15,11 +15,13 @@ public class User {
   private LocalDateTime createdAt;
 
   List<User> userList = null;
+  private String[][] cityMap;
 
 
 
-  public User(List<User> userList) {
+  public User(List<User> userList, String[][] cityMap) {
     this.userList = userList;
+    this.cityMap = cityMap;
   }
 
   public User(long id, String username, String email, String password, Role role) {
@@ -41,20 +43,30 @@ public class User {
    */
   public boolean register(long id, long customerId, String username, String email, String password, Role role, List<Customer> customerList) {
     try {
-      User newUser = new User(this.userList);
-      newUser.id = id;
-      newUser.username = username;
-      newUser.email = email;
-      newUser.password = password;
-      newUser.role = role;
-      newUser.createdAt = LocalDateTime.now();
-      Customer customer = new Customer(customerList);
-      customer.create(customerId, newUser, customerList);
-      userList.add(newUser);
+        User newUser = new User(this.userList, this.cityMap);
+        newUser.setId(id);
+        newUser.setUsername(username);
+        newUser.setEmail(email);
+        newUser.setPassword(password);
+        newUser.setRole(role);
+        newUser.createdAt = LocalDateTime.now();
+
+        Customer customer = new Customer(customerList, cityMap);
+
+        
+        if (!customer.create(customerId, newUser)) {
+            System.out.println("Customer registration failed!");
+            return false;
+        }
+        
+        userList.add(newUser);
+
+        return true;
+
     } catch (Exception e) {
+      e.printStackTrace();
       return false;
     }
-    return true;
   }
 
 

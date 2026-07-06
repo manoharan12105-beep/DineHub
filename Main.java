@@ -52,6 +52,17 @@ public class Main {
   static UserResponse loggedIn = null;
   static Scanner scanner = new Scanner(System.in);
 
+   /*
+    City Map:
+      1 -> road 
+      0 -> building
+      r1, r2, r3, ... -> Restaurant Location
+      c1, c2, c3, ... -> Customer Location
+      d1, d2, d3, ... -> Delivery person Location
+  */
+ static int n = 60;
+  static String[][] cityMap = new String[n][n];
+
 
   // Data seeding (admin)
   public Main() {
@@ -63,6 +74,84 @@ public class Main {
     admin.setContactNo("+91 9876543210");
     admin.setUserId(userId++);
     boolean res = admin.addAdmin(admin, "admin$123");
+
+    generateMap();
+  }
+
+
+  public Main(int[] coords, String name) {
+    try {
+      updateMap(coords[0], coords[1], name);
+    } catch (Exception e) {
+      System.out.println("Check Coords");
+    }
+  }
+
+
+  // Generate default cityMap
+  public static void generateMap() {
+    // 1 -> road 
+    // 0 -> building
+    // # -> border
+    // r1, r2, r3, ... -> Restaurant Location
+    // c1, c2, c3, ... -> Customer Location
+    // d1, d2, d3, ... -> Delivery person Location
+    for (int i = 0; i < n; i++) {
+      for (int j = 0; j < n; j++) {
+        if(i == 0 || i == n -1  || j == 0 || j == n - 1) {
+          cityMap[i][j] = "#";
+        } else {
+          if((i + 1) % 15 == 0 || (j + 1) % 3 == 0) {
+            cityMap[i][j] = "1";
+          } else {
+            cityMap[i][j] = "0";
+          }
+        }
+      }
+    }
+  
+  }
+
+
+  // Displays the City map
+  public static void displayCityMap() {
+    for(int i = 0; i < n; i++) {
+      for(int j = 0; j < n; j++) {
+        System.out.print(cityMap[i][j] + " ");
+      }
+      System.out.println();
+    }
+  }
+
+
+
+  // Update City Map
+  public static boolean updateMap(int i, int j, String locationDetail) {
+    if(i > 99 || j > 99 || locationDetail.length() < 2) {
+      return false;
+    }
+
+    if(cityMap[i][j].equals("1") ) {
+      System.out.println("Enter a Valid Location");
+      return false;
+    }
+
+    String s = locationDetail.toUpperCase();
+    char c = s.charAt(0);
+
+    if(!(c == 'C' || c == 'R' || c == 'D')) {
+      System.out.println("Invalid Location Detail");
+      return false;
+    }
+
+    if(!cityMap[i][j].equals("0")) {
+      System.out.println("There is already a Building there");
+      return false;
+    }
+
+    cityMap[i][j] = s;
+
+    return true;
   }
 
   
@@ -136,8 +225,8 @@ public class Main {
                 String contactNo = scanner.nextLine();
                 System.out.println("Enter Gender(M/F/O) :");
                 String gender = scanner.nextLine();
-                System.out.println("Enter Address :");
-                String address = scanner.nextLine();
+                System.out.print("Enter Address (x, y) coordinates in the city map:");
+                int[] address =  {Integer.parseInt(scanner.nextLine()), Integer.parseInt(scanner.nextLine())};
 
                 customer.setName(name);
                 customer.setAge(age);
@@ -167,38 +256,51 @@ public class Main {
 
             // Delete Account 
             case 2 : {
-              long userId = loggedIn.getId();
-              User user = null;
-              for (User u : userList) {
-                if(u.getId() == userId) {
-                  user = u;
-                  break;
-                }
-              }
-
-              Customer customer = null;
-
-              for (Customer c : customerList) {
-                if(c.getUserId() == userId) {
-                  customer = c;
-                  break;
-                }
-              }
-
               System.out.println("Are you sure to DELETE your account(Y/N) :");
               char confirmation = scanner.nextLine().charAt(0);
 
               if(confirmation == 'Y') {
+                try {
+                long userId = loggedIn.getId();
+                User user = null;
+                for (User u : userList) {
+                  if(u.getId() == userId) {
+                    user = u;
+                    break;
+                  }
+                }
+
+                Customer customer = null;
+
+                for (Customer c : customerList) {
+                  if(c.getUserId() == userId) {
+                    customer = c;
+                    break;
+                  }
+                }
+
                 userList.remove(user);
                 customerList.remove(customer);
 
                 System.out.println("Account deleted Successfully");
+                } catch (Exception e) {
+                  System.out.println("Something went  wrong...");
+                }
               } else if(confirmation == 'N') {
                 System.out.println("Your Account is safe.");
+              } else {
+                System.out.println("Retry with Valid choice");
               }
 
+              break;
             }
           }
+          break;
+        }
+        
+        // View food list 
+        case 2 : {
+
         }
       }
     }
@@ -234,7 +336,7 @@ public class Main {
       }
 
       Admin admin = new Admin(userList, adminList);
-      User user = new User(userList);
+      User user = new User(userList, cityMap);
       switch (choice) {
         // View profile
         case 1 : {
@@ -370,7 +472,17 @@ public class Main {
 
   // ============================================ Logged in RestaurantManager Methods ============================================ //
   public static void restaurantManagerMethods () {
-    System.out.println("place holder (role.RestaurantManager)" );
+    System.out.println();
+    System.out.println("===================================");
+    System.out.println("      Restaurant Manager Menu      ");
+    System.out.println("===================================");
+
+    System.out.println("1. Add Food");
+    System.out.println("2. Update Food Details");
+    System.out.println("3. Delete Food");
+    System.out.println("4. ");
+    
+
   }
 
 
@@ -409,7 +521,7 @@ public class Main {
         continue;
       }
 
-      User user = new User(userList);
+      User user = new User(userList, cityMap);
 
       switch (choice1) {
         // Customer Register Case
@@ -430,6 +542,7 @@ public class Main {
             System.out.println("Register Failed...");;
           }
 
+          displayCityMap();
           break;
         }
 
