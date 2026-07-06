@@ -115,22 +115,87 @@ public class Main {
           switch(choice1) {
             //  Update Customer Details
             case 1 : {
+              try{
+                long userId = loggedIn.getId();
+                Customer customer = null;
+
+                for(Customer c : customerList) {
+                  if(c.getUserId() == userId) {
+                    customer = c;
+                    break;
+                  }
+                }
+                System.out.println("===== Enter Update Details =====");
+                System.out.println("Enter name :");
+                String name = scanner.nextLine();
+                System.out.println("Enter password :");
+                String pass = scanner.nextLine();
+                System.out.println("Enter age :");
+                int age = Integer.parseInt(scanner.nextLine());
+                System.out.println("Enter Contact No :");
+                String contactNo = scanner.nextLine();
+                System.out.println("Enter Gender(M/F/O) :");
+                String gender = scanner.nextLine();
+                System.out.println("Enter Address :");
+                String address = scanner.nextLine();
+
+                customer.setName(name);
+                customer.setAge(age);
+                customer.setContactNo(contactNo);
+                customer.setGender(gender);
+                customer.setAddress(address);
+
+                User user = null;
+
+                for(User u : userList) {
+                  if(u.getId() == userId) {
+                    user = u;
+                    break;
+                  }
+                }
+
+                user.setUsername(name);
+                user.setPassword(pass);
+
+                System.out.println("Account updated Successfully");
+              } catch (Exception e) {
+                System.out.println("Something went wrong, Try again some time later");
+              }
+
+              break;
+            }
+
+            // Delete Account 
+            case 2 : {
               long userId = loggedIn.getId();
+              User user = null;
+              for (User u : userList) {
+                if(u.getId() == userId) {
+                  user = u;
+                  break;
+                }
+              }
+
               Customer customer = null;
 
-              for(Customer c : customerList) {
+              for (Customer c : customerList) {
                 if(c.getUserId() == userId) {
                   customer = c;
                   break;
                 }
               }
-              System.out.println("===== Enter Update Details =====");
-              System.out.println("Enter name :");
-              String name = scanner.nextLine();
-              System.out.println("Enter email :");
-              String email = scanner.nextLine();
-              System.out.println("Enter age :");
-              int age = Integer.parseInt(scanner.nextLine());
+
+              System.out.println("Are you sure to DELETE your account(Y/N) :");
+              char confirmation = scanner.nextLine().charAt(0);
+
+              if(confirmation == 'Y') {
+                userList.remove(user);
+                customerList.remove(customer);
+
+                System.out.println("Account deleted Successfully");
+              } else if(confirmation == 'N') {
+                System.out.println("Your Account is safe.");
+              }
 
             }
           }
