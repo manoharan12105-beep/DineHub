@@ -3,17 +3,28 @@ package Class;
 import java.util.ArrayList;
 import java.util.List;
 
+import enums.Role;
+
 public class RestaurantManager {
   private Long managerId;
   private String name;
   private int age;
   private String gender;
   private String contactNo;
+  private Long userId; 
 
     List<Food> foodList = new ArrayList<>();
-    List<RestaurantManager> managerList = new ArrayList<>();
+    List<RestaurantManager> managerList;
+    List<User> userList;
     
-    RestaurantManager(Long managerId, String name,int age,String gender, String contactNo){
+   public  RestaurantManager( List<RestaurantManager> managerList, List<User> userList){
+    this.managerList = managerList;
+    this.userList = userList;
+}
+
+    public RestaurantManager(List<RestaurantManager> managerList, List<User> userList, Long managerId, String name,int age,String gender, String contactNo){
+    this.managerList = managerList;
+    this.userList = userList;
     this.managerId=managerId;
     this.name=name;
     this.age=age;
@@ -22,9 +33,19 @@ public class RestaurantManager {
 }
 
 
-    public String create(RestaurantManager restaurantManager){
-        managerList.add(restaurantManager);
-        return "RestaurantManager added";
+    public String create(RestaurantManager restaurantManager, long userId, String email, String password){
+                
+                restaurantManager.userId=userId;
+
+                User user=new User(userList);
+                user.setId(userId);
+                user.setEmail(email);
+                user.setPassword(password);
+                user.setRole(Role.RESTAURANT_MANAGER);
+                userList.add(user);
+                managerList.add(restaurantManager);
+        
+                return "RestaurantManager added";
     }
 
     public RestaurantManager getbyId(long id){
@@ -80,5 +101,41 @@ public class RestaurantManager {
             }
         }
         return "not found";
+    }
+
+    public Long getManagerId() {
+        return managerId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public String getContactNo() {
+        return contactNo;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public List<Food> getFoodList() {
+        return foodList;
+    }
+
+    public List<RestaurantManager> getManagerList() {
+        return managerList;
+    }
+
+    public List<User> getUserList() {
+        return userList;
     }
 }

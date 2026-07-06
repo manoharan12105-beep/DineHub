@@ -11,11 +11,20 @@ public class Restaurant {
     private LocalDateTime startedAt;
     private Long restaurantManagerId; 
 
-    List<Restaurant> restaurantList = new ArrayList<>();
-    List<Food> foodList = new ArrayList<>();
-    List<Orders> orderList = new ArrayList<>();
+    List<Restaurant> restaurantList;
+    List<Food> foodList;
+    List<Orders> orderList;
+    List<RestaurantManager> managerList;
 
-    Restaurant( Long restaurantId,String name,String owner, Long restaurantManagerId){
+
+    public Restaurant(List<Restaurant> restaurantList, List<RestaurantManager> managerList) {
+        this.restaurantList = restaurantList;
+        this.managerList = managerList;
+    }
+
+   public Restaurant(List<Restaurant> restaurantList,List<RestaurantManager> managerList, Long restaurantId,String name,String owner, Long restaurantManagerId){
+        this.restaurantList = restaurantList;
+        this.managerList=managerList;
         this.restaurantId=restaurantId;
         this.name=name;
         this.owner=owner;
@@ -25,9 +34,18 @@ public class Restaurant {
     }
 
     public String create(Restaurant restaurant){
-       restaurantList.add(restaurant);
-       return "Restaurant as created";
+        RestaurantManager restaurantManager = new RestaurantManager(managerList, null);
+        RestaurantManager manager = restaurantManager.getbyId(restaurant.restaurantManagerId);
+
+        if (manager == null) {
+            return "Manager not found.";
+        }
+
+        restaurant.startedAt = LocalDateTime.now();
+        restaurantList.add(restaurant);
+        return "Restaurant as created";
     }
+
 
     public Restaurant getbyId(long id){
         for(Restaurant resturant: restaurantList){
