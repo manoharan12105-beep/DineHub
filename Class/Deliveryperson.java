@@ -73,14 +73,14 @@ public class DeliveryPerson {
 
 
     public boolean acceptDelivery(Delivery delivery){
-    deliveryList.add(delivery);
-    return true;
-}
+      deliveryList.add(delivery);
+      return true;
+    }
 
     public boolean updatedDeliveryStatus(Delivery delivery, Status status){
-    this.status = status;
-    return true;
-}
+      this.status = status;
+      return true;
+    }
 
     public List<Delivery> viewAssignOfDeliveries(){
         return deliveryList;

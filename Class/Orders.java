@@ -1,9 +1,10 @@
 package Class;
 
-import java.io.ObjectInputFilter.Status;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import enums.Status;
 
 public class Orders {
   private Long orderId;
@@ -13,8 +14,8 @@ public class Orders {
   private int quantity;
   private Double totalAmount;
 
-
   static List<Orders> orderList = new ArrayList<>();
+
   public Orders(Long orderId, Double price,Status orderStatus,int quantity) { 
         this.orderId=orderId;
         this.orderDate=LocalDateTime.now();
@@ -51,7 +52,7 @@ public class Orders {
     return "Not found order";
 }
 
-    public  String delete(Long id){
+    public String delete(Long id){
          for (int i = 0; i < orderList.size(); i++) {
             if (orderList.get(i).orderId.equals(id)) {
                 orderList.remove(i);
@@ -63,8 +64,8 @@ public class Orders {
     }
 
   public String cancelOrder(Long id){
-     for (int i = 0; i < orderList.size(); i++) {
-            if (orderList.get(i).orderId.equals(id)) {
+     for(int i = 0; i < orderList.size(); i++){
+            if(orderList.get(i).orderId.equals(id)){
                 orderList.remove(i);
                 return "canceled order";
             }
@@ -73,8 +74,8 @@ public class Orders {
     }
 
     public String updateStatus(Status orderStatus,Long id){
-        for (int i = 0; i < orderList.size(); i++) {
-            if (orderList.get(i).orderId.equals(id)) {
+        for(int i = 0; i < orderList.size(); i++){
+            if(orderList.get(i).orderId.equals(id)) {
                 orderList.get(i).orderStatus=orderStatus;
                 return "Status updated";
             }
@@ -110,6 +111,10 @@ public class Orders {
 
     public Double getTotalAmount() {
         return totalAmount;
+    }
+
+    public void setOrderStatus(Status orderStatus) {
+        this.orderStatus = orderStatus;
     }
 
 

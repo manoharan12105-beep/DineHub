@@ -157,7 +157,6 @@ public class Main {
   
   // ======================================== Logged in Customer methods ======================================== //
   public static void customerMethods() {
-    
     while(true) {
       System.out.println();
       System.out.println("===================================");
@@ -300,30 +299,361 @@ public class Main {
         
         // View food list 
         case 2 : {
-          System.out.println();
-          System.out.println("===================================");
-          System.out.println("             FOOD  MENU            ");
-          System.out.println("===================================");
-
-          for (Food foodItem : food) {
-            System.out.println("");
-            System.out.println("Food Id          :" + foodItem.getFoodId());
-            System.out.println("Food Name        :" + foodItem.getName());
-            System.out.println("Food Category    :" + foodItem.getCategory());
-            System.out.println("Food description :" + foodItem.getDescription());
-            System.out.println("Food price       :" + foodItem.getPrice());
-            System.out.println("Preparation Time :" + foodItem.getTimetoprepareMinute() + " Minutes");
-            String available = foodItem.isAvailability() ? "Available" : "Not Available";
-            System.out.println("Food Availability:" + available);
-          }
-          System.out.println();
-          
+          displayFoodMenu();
           break;
         }
 
         // Place Order 
         case 3 : {
-          
+          handlePlaceOrder();
+          break;
+        }
+
+        // Cancel Order
+        case 4 : {
+          handleCancelOrder();
+          break;
+        }
+
+        // View order history
+        case 5 : {
+          displayOrderHistory();
+          break;
+        }
+
+        // Favorites
+        case 6 : {
+          handleFavoritesMenu();
+          break;
+        }
+
+        // Logout
+        case 7 : {
+          loggedIn = null;
+          System.out.println("Logged out Successfully");
+          return;
+        }
+
+        default : {
+          System.out.println("Enter valid choice...");
+          break;
+        }
+      }
+    }
+  }
+
+  private static Customer getLoggedInCustomer() {
+    if (loggedIn == null) {
+      return null;
+    }
+
+    for (Customer customer : customerList) {
+      if (customer.getUserId() == loggedIn.getId()) {
+        return customer;
+      }
+    }
+
+    return null;
+  }
+
+  private static List<Food> collectAllFoods() {
+    List<Food> allFoods = new ArrayList<>();
+    for (RestaurantManager manager : managerList) {
+      allFoods.addAll(manager.getFoodList());
+    }
+    return allFoods;
+  }
+
+  private static Food findFoodById(Long foodId) {
+    for (Food foodItem : collectAllFoods()) {
+      if (foodItem.getFoodId() != null && foodItem.getFoodId().equals(foodId)) {
+        return foodItem;
+      }
+    }
+    return null;
+  }
+
+  private static Orders findOrderById(Long orderId) {
+    for (Orders order : orderList) {
+      if (order.getOrderId() != null && order.getOrderId().equals(orderId)) {
+        return order;
+      }
+    }
+    return null;
+  }
+
+  private static Favorite findFavoriteById(Long favId) {
+    for (Favorite favorite : favoriteList) {
+      if (favorite.getFavId() != null && favorite.getFavId().equals(favId)) {
+        return favorite;
+      }
+    }
+    return null;
+  }
+
+  private static void displayFoodMenu() {
+    System.out.println();
+    System.out.println("===================================");
+    System.out.println("             FOOD  MENU            ");
+    System.out.println("===================================");
+
+    List<Food> foods = collectAllFoods();
+    if (foods.isEmpty()) {
+      System.out.println("No food items available right now.");
+      return;
+    }
+
+    for (Food foodItem : foods) {
+      System.out.println();
+      System.out.println("Food Id          : " + foodItem.getFoodId());
+      System.out.println("Food Name        : " + foodItem.getName());
+      System.out.println("Food Category    : " + foodItem.getCategory());
+      System.out.println("Food description : " + foodItem.getDescription());
+      System.out.println("Food price       : " + foodItem.getPrice());
+      System.out.println("Preparation Time : " + foodItem.getTimetoprepareMinute() + " Minutes");
+      String available = foodItem.isAvailability() ? "Available" : "Not Available";
+      System.out.println("Food Availability: " + available);
+    }
+    System.out.println();
+  }
+
+  private static void handlePlaceOrder() {
+    Customer customer = getLoggedInCustomer();
+    if (customer == null) {
+      System.out.println("Customer profile not found.");
+      return;
+    }
+
+    List<Food> foods = collectAllFoods();
+    if (foods.isEmpty()) {
+      System.out.println("No food items available to order.");
+      return;
+    }
+
+    displayFoodMenu();
+
+    try {
+      System.out.print("Enter Food Id : ");
+      Long foodId = Long.parseLong(scanner.nextLine());
+      Food foodItem = findFoodById(foodId);
+
+      if (foodItem == null) {
+        System.out.println("Food not found.");
+        return;
+      }
+
+      if (!foodItem.isAvailability()) {
+        System.out.println("Selected food is not available.");
+        return;
+      }
+
+      System.out.print("Enter Quantity : ");
+      int quantity = Integer.parseInt(scanner.nextLine());
+      if (quantity <= 0) {
+        System.out.println("Quantity must be greater than zero.");
+        return;
+      }
+
+      Orders order = new Orders(orderId++, foodItem.getPrice(), enums.Status.PENDING, quantity);
+      orderList.add(order);
+      Orders.getOrderList().add(order);
+
+      OrderDetail detail = new OrderDetail(
+          orderDetailId++,
+          order.getOrderId(),
+          quantity,
+          foodItem.getPrice(),
+          foodItem.getFoodId(),
+          customer.getId());
+      orderDetailList.add(detail);
+
+      System.out.println("Order placed successfully.");
+      System.out.println("Order Id   : " + order.getOrderId());
+      System.out.println("Food Name  : " + foodItem.getName());
+      System.out.println("Quantity   : " + quantity);
+      System.out.println("Total Cost : " + order.getTotalAmount());
+    } catch (Exception e) {
+      System.out.println("Something went wrong while placing the order.");
+    }
+  }
+
+  private static void handleCancelOrder() {
+    Customer customer = getLoggedInCustomer();
+    if (customer == null) {
+      System.out.println("Customer profile not found.");
+      return;
+    }
+
+    if (orderList.isEmpty()) {
+      System.out.println("No orders found.");
+      return;
+    }
+
+    try {
+      System.out.print("Enter Order Id to cancel : ");
+      Long orderIdToCancel = Long.parseLong(scanner.nextLine());
+      Orders order = findOrderById(orderIdToCancel);
+
+      if (order == null) {
+        System.out.println("Order not found.");
+        return;
+      }
+
+      order.setOrderStatus(enums.Status.CANCELLED);
+      orderList.remove(order);
+      Orders.getOrderList().remove(order);
+
+      for (int i = 0; i < orderDetailList.size(); i++) {
+        OrderDetail detail = orderDetailList.get(i);
+        if (detail.getOrderId().equals(orderIdToCancel) && detail.getCustomerId().equals(customer.getId())) {
+          orderDetailList.remove(i);
+          break;
+        }
+      }
+
+      System.out.println("Order cancelled successfully.");
+    } catch (Exception e) {
+      System.out.println("Invalid order id.");
+    }
+  }
+
+  private static void displayOrderHistory() {
+    Customer customer = getLoggedInCustomer();
+    if (customer == null) {
+      System.out.println("Customer profile not found.");
+      return;
+    }
+
+    System.out.println();
+    System.out.println("===================================");
+    System.out.println("           ORDER HISTORY           ");
+    System.out.println("===================================");
+
+    boolean found = false;
+    for (OrderDetail detail : orderDetailList) {
+      if (!detail.getCustomerId().equals(customer.getId())) {
+        continue;
+      }
+
+      Food foodItem = findFoodById(detail.getFoodId());
+      Orders order = findOrderById(detail.getOrderId());
+
+      System.out.println();
+      System.out.println("Order Detail Id : " + detail.getOrderDetailId());
+      System.out.println("Order Id        : " + detail.getOrderId());
+      System.out.println("Food Id         : " + detail.getFoodId());
+      System.out.println("Food Name       : " + (foodItem != null ? foodItem.getName() : "Unknown"));
+      System.out.println("Quantity        : " + detail.getQuantity());
+      System.out.println("Price           : " + detail.getPrice());
+      System.out.println("Status          : " + (order != null ? order.getOrderStatus() : "Unknown"));
+      System.out.println("Ordered At      : " + detail.getCreatedAt());
+      found = true;
+    }
+
+    if (!found) {
+      System.out.println("No order history found.");
+    }
+  }
+
+  private static void handleFavoritesMenu() {
+    Customer customer = getLoggedInCustomer();
+    if (customer == null) {
+      System.out.println("Customer profile not found.");
+      return;
+    }
+
+    while (true) {
+      System.out.println();
+      System.out.println("===================================");
+      System.out.println("           FAVORITES MENU          ");
+      System.out.println("===================================");
+      System.out.println("1. View Favourites");
+      System.out.println("2. Add Favourite");
+      System.out.println("3. Remove Favourite");
+      System.out.println("4. Back");
+      System.out.print("Enter choice : ");
+
+      int choice = 0;
+      try {
+        choice = Integer.parseInt(scanner.nextLine());
+      } catch (Exception e) {
+        System.out.println("Enter valid choice...");
+        continue;
+      }
+
+      if (choice == 4) {
+        return;
+      }
+
+      switch (choice) {
+        case 1 : {
+          boolean found = false;
+          for(Favorite favorite : favoriteList){
+            if(!favorite.getCustomerId().equals(customer.getId()))
+              continue;
+
+            System.out.println();
+            System.out.println("Favourite Id : " + favorite.getFavId());
+            System.out.println("Food Id      : " + favorite.getFoodId());
+            System.out.println("Note         : " + favorite.getNote());
+            System.out.println("Added At     : " + favorite.getAddAt());
+            found = true;
+          }
+
+          if (!found) 
+            System.out.println("No favourites found.");
+
+
+          break;
+        }
+
+        case 2 : {
+          try {
+            displayFoodMenu();
+            System.out.print("Enter Food Id to add to favourites : ");
+            Long foodId = Long.parseLong(scanner.nextLine());
+            Food foodItem = findFoodById(foodId);
+
+            if(foodItem == null) {
+              System.out.println("Food not found.");
+              break;
+            }
+
+            System.out.print("Enter note : ");
+            String note = scanner.nextLine();
+            Favorite favorite = new Favorite(favoriteId++, customer.getId(), foodId, note.isBlank() ? foodItem.getName() : note);
+            favoriteList.add(favorite);
+            Favorite.getFavoriteList().add(favorite);
+            System.out.println("Favourite added successfully.");
+          } catch (Exception e) {
+            System.out.println("Could not add favourite.");
+          }
+          break;
+        }
+
+        case 3 : {
+          try {
+            System.out.print("Enter Favourite Id to remove : ");
+            Long favId = Long.parseLong(scanner.nextLine());
+            Favorite favorite = findFavoriteById(favId);
+
+            if(favorite == null || !favorite.getCustomerId().equals(customer.getId())) {
+              System.out.println("Favourite not found.");
+              break;
+            }
+
+            favoriteList.remove(favorite);
+            Favorite.getFavoriteList().remove(favorite);
+            System.out.println("Favourite removed successfully.");
+          } catch (Exception e) {
+            System.out.println("Invalid favourite id.");
+          }
+          break;
+        }
+
+        default : {
+          System.out.println("Enter valid choice...");
+          break;
         }
       }
     }
@@ -518,7 +848,7 @@ public class Main {
         case 9 : {
           loggedIn = null;
           System.out.println("Logged out Successfully");
-          break;
+          return;
         }
 
         default : {
@@ -551,7 +881,7 @@ public class Main {
 
   // ============================================   Logged in DeliveryPerson Methods  ============================================ //
   public static void deliveryPersonMethods () {
-    System.out.println("place holder (role.DeliveryPerson)" );
+    System.out.println("place holder (role.DeliveryPerson)");
   }
   
 // ========================================================= Main Method ========================================================= //

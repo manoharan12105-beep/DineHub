@@ -5,14 +5,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Favorite {
+  private Long customerId;
+  private Long foodId;
   private Long favId;
   private LocalDate addAt;
   private String note;
 
   static List<Favorite> favoriteList = new ArrayList<>();
 
-  Favorite(Long favId, String note){
+  public Favorite(Long favId, Long customerId, Long foodId, String note){
     this.favId=favId;
+    this.customerId = customerId;
+    this.foodId = foodId;
     this.note=note;
     this.addAt=LocalDate.now();
   }
@@ -53,6 +57,14 @@ public class Favorite {
 
     public Long getFavId() {
       return favId;
+    }
+
+    public Long getCustomerId() {
+      return customerId;
+    }
+
+    public Long getFoodId() {
+      return foodId;
     }
 
     public LocalDate getAddAt() {
