@@ -449,29 +449,69 @@ public class Main {
 
         // Add Restaurant
         case 5 : {
-          System.out.println("Placeholder : add restaurant");
+          System.out.println();
+          System.out.print("Enter Manager name : ");
+          String name = scanner.nextLine();
+          System.out.print("Enter Manager age: ");
+          int age = Integer.parseInt(scanner.nextLine());
+          System.out.print("Enter Manager gender(M/F/O): ");
+          String gender = scanner.nextLine();
+          System.out.print("Enter Manager contactNo: ");
+          String contactNo = scanner.nextLine();
+          System.out.print("Enter Manager email : ");
+          String email = scanner.nextLine();
+          System.out.print("Enter Manager password : ");
+          String password = scanner.nextLine();
 
+          RestaurantManager  restaurantManager = new RestaurantManager(managerList,userList, managerId++, name, age, gender, contactNo);
+          restaurantManager.create(restaurantManager, userId++, email, password);
+
+          System.out.print("Enter Restaurant name : ");
+          String restaurantname = scanner.nextLine();
+          System.out.print("Enter Owner name : ");
+          String owner = scanner.nextLine();
+          Restaurant restaurant = new Restaurant(restaurantList, managerList, restaurantId++, restaurantname, owner, restaurantManager.getManagerId());
+          System.out.println(restaurant.create(restaurant));
           break;
         }
 
         // Delete Restaurant
         case 6 : {
-          System.out.println("Placeholder : delete restaurant");
-
+          System.out.println();
+          System.out.print("Enter Restaurant id to delete : ");
+          long id = Long.parseLong(scanner.nextLine());
+          Restaurant restaurant = new Restaurant(restaurantList, managerList);
+          System.out.println(restaurant.delete(id));
           break;
         }
 
         // Add Delivery Person
         case 7 : {
-          System.out.println("Placeholder : Add DeliveryPerson");
+          System.out.println();
+          System.out.print("Enter Delivery Person name : ");
+          String name = scanner.nextLine();
+          System.out.print("Enter Phone No : ");
+          String phone = scanner.nextLine();
+          System.out.print("Enter Email : ");
+          String email = scanner.nextLine();
+          System.out.print("Enter Age : ");
+          int age = Integer.parseInt(scanner.nextLine());
+          System.out.print("Enter Gender : ");
+          String gender = scanner.nextLine();
+          DeliveryPerson deliveryPerson = new DeliveryPerson(deliveryPersonList, deliveryPersonId++, name, phone, email,age, gender);
+          deliveryPerson.create(deliveryPerson);
 
           break;
         }
 
         // Remove Delivery Person
         case 8 : {
-          System.out.println("Placeholder : Remove DeliveryPerson");
+          System.out.println();
+          System.out.print("Enter Delivery Person id to remove : ");
+          long id = Long.parseLong(scanner.nextLine());
 
+          DeliveryPerson deliveryPerson = new DeliveryPerson(deliveryPersonList);
+          System.out.println(deliveryPerson.delete(id));
           break;
         }
 
