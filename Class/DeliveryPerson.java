@@ -62,7 +62,7 @@ public class DeliveryPerson {
 }
 
     public  String delete(Long id){
-         for (int i = 0; i < deliveryPersonList.size(); i++) {
+        for (int i = 0; i < deliveryPersonList.size(); i++) {
             if (deliveryPersonList.get(i).deliverpersonId.equals(id)) {
                 deliveryPersonList.remove(i);
                 return "deleted account";
@@ -84,8 +84,6 @@ public class DeliveryPerson {
 
     public List<Delivery> viewAssignOfDeliveries(){
         return deliveryList;
-       
-
     }
 
     public Long getDeliverpersonId() {
@@ -97,7 +95,7 @@ public class DeliveryPerson {
     }
 
     public String getPhoneNo() {
-        return PhoneNo;
+        return phoneNo;
     }
 
     public String getEmail() {
