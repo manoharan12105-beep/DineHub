@@ -33,6 +33,10 @@ public class User {
     this.createdAt = LocalDateTime.now();
   }
 
+  public User(List<User> userList2) {
+    this.userList = userList2;
+  }
+
   /**
    * User Register Method
    * @param id

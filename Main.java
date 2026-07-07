@@ -300,7 +300,30 @@ public class Main {
         
         // View food list 
         case 2 : {
+          System.out.println();
+          System.out.println("===================================");
+          System.out.println("             FOOD  MENU            ");
+          System.out.println("===================================");
 
+          for (Food foodItem : food) {
+            System.out.println("");
+            System.out.println("Food Id          :" + foodItem.getFoodId());
+            System.out.println("Food Name        :" + foodItem.getName());
+            System.out.println("Food Category    :" + foodItem.getCategory());
+            System.out.println("Food description :" + foodItem.getDescription());
+            System.out.println("Food price       :" + foodItem.getPrice());
+            System.out.println("Preparation Time :" + foodItem.getTimetoprepareMinute() + " Minutes");
+            String available = foodItem.isAvailability() ? "Available" : "Not Available";
+            System.out.println("Food Availability:" + available);
+          }
+          System.out.println();
+          
+          break;
+        }
+
+        // Place Order 
+        case 3 : {
+          
         }
       }
     }

@@ -15,8 +15,7 @@ public class Orders {
 
 
   static List<Orders> orderList = new ArrayList<>();
-    Orders(Long orderId, Double price,Status orderStatus,int quantity)
-    { 
+  public Orders(Long orderId, Double price,Status orderStatus,int quantity) { 
         this.orderId=orderId;
         this.orderDate=LocalDateTime.now();
         this.orderStatus=orderStatus;
@@ -59,6 +58,7 @@ public class Orders {
                 return "deleted order";
             }
         }
+        
         return "not found";
     }
 

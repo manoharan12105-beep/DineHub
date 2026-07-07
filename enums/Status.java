@@ -8,5 +8,6 @@ public enum Status {
     PREPARING,
     OUT_FOR_DELIVERY,
     DELIVERED,
-    CANCELLED
+    CANCELLED,
+    AVAILABLE;
 }
