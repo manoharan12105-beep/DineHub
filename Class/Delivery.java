@@ -10,6 +10,8 @@ public class Delivery {
   private Long orderId;
   private Status status;
   private LocalDateTime deliveredAt;
+  private Integer estimatedDeliveryMinutes;
+  private Integer estimatedDeliverySeconds;
 
   List<Delivery> deliveryList;
 
@@ -84,6 +86,22 @@ public class Delivery {
 
   public LocalDateTime getDeliveredAt() {
       return deliveredAt;
+  }
+
+  public Integer getEstimatedDeliveryMinutes() {
+      return estimatedDeliveryMinutes;
+  }
+
+  public void setEstimatedDeliveryMinutes(Integer estimatedDeliveryMinutes) {
+      this.estimatedDeliveryMinutes = estimatedDeliveryMinutes;
+  }
+
+  public Integer getEstimatedDeliverySeconds() {
+      return estimatedDeliverySeconds;
+  }
+
+  public void setEstimatedDeliverySeconds(Integer estimatedDeliverySeconds) {
+      this.estimatedDeliverySeconds = estimatedDeliverySeconds;
   }
 
   public List<Delivery> getDeliveryList() {

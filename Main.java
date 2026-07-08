@@ -17,6 +17,8 @@ import DTO.UserRequest;
 import DTO.UserResponse;
 import enums.Category;
 import enums.Role;
+import Utils.Cell;
+import Utils.PathFinder;
 
 
 public class Main {
@@ -33,6 +35,7 @@ public class Main {
   static long deliveryRating = 1;
   static long deliveryPersonId = 1;
   static long restaurantRating = 1;
+  static PathFinder pathFinder = new PathFinder();
 
 
   static List<User> userList = new ArrayList<>();
@@ -381,6 +384,24 @@ public class Main {
     return null;
   }
 
+  private static Customer findCustomerById(Long customerId) {
+    for(Customer customer : customerList) {
+      if(customer.getId() == customerId) {
+        return customer;
+      }
+    }
+    return null;
+  }
+
+  private static OrderDetail findOrderDetailByOrderId(Long orderId) {
+    for(OrderDetail detail : orderDetailList) {
+      if(detail.getOrderId() != null && detail.getOrderId().equals(orderId)) {
+        return detail;
+      }
+    }
+    return null;
+  }
+
   private static Orders findOrderById(Long orderId) {
     for(Orders order : orderList) {
       if(order.getOrderId() != null && order.getOrderId().equals(orderId)) {
@@ -397,6 +418,45 @@ public class Main {
       }
     }
     return null;
+  }
+
+  private static Restaurant findRestaurantById(Long restaurantIdValue) {
+    for(Restaurant restaurant : restaurantList) {
+      if(restaurant.getRestaurantId() != null && restaurant.getRestaurantId().equals(restaurantIdValue)) {
+        return restaurant;
+      }
+    }
+
+    return null;
+  }
+
+  private static int calculateEstimatedDeliverySeconds(List<Cell> path) {
+    if(path == null || path.size() < 2) {
+      return -1;
+    }
+
+    int units = path.size() - 1;
+    int totalSeconds = 0;
+    for(int i = 0; i < units; i++) {
+      totalSeconds += 50 + (int) (Math.random() * 11);
+    }
+
+    return totalSeconds;
+  }
+
+  private static void removeRestaurantFromMap(Restaurant restaurant) {
+    if(restaurant == null) {
+      return;
+    }
+
+    int[] address = restaurant.getAddress();
+    if(address == null || address.length != 2) {
+      return;
+    }
+
+    if(address[0] >= 0 && address[0] < cityMap.length && address[1] >= 0 && address[1] < cityMap[0].length) {
+      cityMap[address[0]][address[1]] = "0";
+    }
   }
 
   private static void displayFoodMenu() {
@@ -740,6 +800,9 @@ public class Main {
       System.out.println("Restaurant   : " + (restaurant != null ? restaurant.getName() : "Unknown"));
       System.out.println("Delivery Id  : " + (delivery != null ? delivery.getDeliveryId() : "Unknown"));
       System.out.println("Status       : " + order.getOrderStatus());
+      if(delivery != null && delivery.getEstimatedDeliveryMinutes() != null) {
+        System.out.println("ETA          : " + delivery.getEstimatedDeliveryMinutes() + " minutes");
+      }
       found = true;
     }
 
@@ -974,6 +1037,12 @@ public class Main {
       System.out.println("Order Id    : " + delivery.getOrderId());
       System.out.println("Status      : " + delivery.getStatus());
       System.out.println("Delivered At: " + delivery.getDeliveredAt());
+      if(delivery.getEstimatedDeliveryMinutes() != null) {
+        System.out.println("ETA         : " + delivery.getEstimatedDeliveryMinutes() + " minutes");
+      }
+      if(delivery.getEstimatedDeliverySeconds() != null) {
+        System.out.println("ETA Seconds : " + delivery.getEstimatedDeliverySeconds() + " seconds");
+      }
     }
   }
 
@@ -1119,7 +1188,20 @@ public class Main {
           System.out.print("Enter Owner name : ");
           String owner = scanner.nextLine();
           Restaurant restaurant = new Restaurant(restaurantList, managerList, restaurantId++, restaurantname, owner, restaurantManager.getManagerId());
-          System.out.println(restaurant.create(restaurant));
+          System.out.print("Enter Restaurant Address (x y): ");
+          String[] locationInput = scanner.nextLine().trim().split("\\s+");
+          int[] address = {
+            Integer.parseInt(locationInput[0]),
+            Integer.parseInt(locationInput[1])
+          };
+          restaurant.setAddress(address);
+
+          String createMessage = restaurant.create(restaurant);
+          System.out.println(createMessage);
+          if(createMessage.toLowerCase().contains("created")) {
+            restaurant.placeOnMap(cityMap, "R" + restaurant.getRestaurantId());
+            displayCityMap();
+          }
           break;
         }
 
@@ -1128,8 +1210,16 @@ public class Main {
           System.out.println();
           System.out.print("Enter Restaurant id to delete : ");
           long id = Long.parseLong(scanner.nextLine());
-          Restaurant restaurant = new Restaurant(restaurantList, managerList);
-          System.out.println(restaurant.delete(id));
+          Restaurant restaurant = findRestaurantById(id);
+          if(restaurant == null) {
+            System.out.println("not found");
+            break;
+          }
+
+          removeRestaurantFromMap(restaurant);
+          Restaurant restaurantRepo = new Restaurant(restaurantList, managerList);
+          System.out.println(restaurantRepo.delete(id));
+          displayCityMap();
           break;
         }
 
@@ -1396,6 +1486,28 @@ public class Main {
             }
 
             Delivery delivery = new Delivery(deliveryList, deliveryId++, order.getOrderId(), enums.Status.CONFIRMED);
+            OrderDetail detail = findOrderDetailByOrderId(orderIdValue);
+            Restaurant restaurant = detail != null ? findRestaurantByFoodId(detail.getFoodId()) : null;
+            Customer customer = detail != null ? findCustomerById(detail.getCustomerId()) : null;
+
+            if(restaurant != null && customer != null && restaurant.getAddress() != null && customer.getAddress() != null) {
+              List<Cell> path = pathFinder.shortestPath(cityMap, restaurant.getAddress(), customer.getAddress());
+              int estimatedSeconds = calculateEstimatedDeliverySeconds(path);
+
+              if(estimatedSeconds > 0) {
+                int estimatedMinutes = (int) Math.ceil(estimatedSeconds / 60.0);
+                delivery.setEstimatedDeliveryMinutes(estimatedMinutes);
+                delivery.setEstimatedDeliverySeconds(estimatedSeconds);
+                System.out.println("Shortest path found:");
+                pathFinder.printPath(path);
+                System.out.println("Estimated delivery time: " + estimatedMinutes + " minutes (" + estimatedSeconds + " seconds)");
+              } else {
+                System.out.println("Could not calculate delivery route.");
+              }
+            } else {
+              System.out.println("Could not calculate delivery route.");
+            }
+
             deliveryList.add(delivery);
             deliveryPerson.acceptDelivery(delivery);
             order.setOrderStatus(enums.Status.CONFIRMED);

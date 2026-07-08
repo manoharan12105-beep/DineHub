@@ -32,7 +32,7 @@ public class PathFinder {
           int newRow = current.row + dr[i];
           int newCol = current.col + dc[i];
 
-          if(isValid(cityMap, visited, newRow, newCol)) {
+          if(isValid(cityMap, visited, newRow, newCol, end)) {
             visited[newRow][newCol] = true;
             parent[newRow][newCol] = current;
             queue.offer(new Cell(newRow, newCol));
@@ -43,7 +43,7 @@ public class PathFinder {
     return buildPath(parent, visited, end);
   }
 
-  private boolean isValid(String[][] cityMap, boolean[][] visited, int row, int col) {
+  private boolean isValid(String[][] cityMap, boolean[][] visited, int row, int col, Cell destination) {
     if(row < 0 || row >= cityMap.length)
       return false;
 
@@ -53,7 +53,7 @@ public class PathFinder {
     if(visited[row][col])
       return false;
 
-    return cityMap[row][col].equals("1");
+    return cityMap[row][col].equals("1") || (row == destination.row && col == destination.col);
   }
 
   private List<Cell> buildPath(Cell[][] parent, boolean[][] visited, Cell destination) {

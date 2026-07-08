@@ -10,6 +10,7 @@ public class Restaurant {
     private String owner;
     private LocalDateTime startedAt;
     private Long restaurantManagerId; 
+    private int[] address = new int[2];
 
     List<Restaurant> restaurantList;
     List<Food> foodList;
@@ -116,6 +117,20 @@ public class Restaurant {
 
     public Long getRestaurantManagerId() {
         return restaurantManagerId;
+    }
+
+    public int[] getAddress() {
+        return address;
+    }
+
+    public void setAddress(int[] address) {
+        this.address = address;
+    }
+
+    public void placeOnMap(String[][] cityMap, String locationName) {
+        if(address != null && address.length == 2) {
+            cityMap[address[0]][address[1]] = locationName;
+        }
     }
 
     public List<Restaurant> getRestaurantList() {
