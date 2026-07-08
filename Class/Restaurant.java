@@ -30,14 +30,21 @@ public class Restaurant {
         this.owner=owner;
         this.startedAt = LocalDateTime.now();
         this.restaurantManagerId=restaurantManagerId;
+        this.foodList = new ArrayList<>();
+        this.orderList = new ArrayList<>();
 
     }
 
     public String create(Restaurant restaurant){
-        RestaurantManager restaurantManager = new RestaurantManager(managerList, null);
-        RestaurantManager manager = restaurantManager.getbyId(restaurant.restaurantManagerId);
+        RestaurantManager manager = null;
+        for(RestaurantManager restaurantManager : managerList) {
+            if(restaurantManager.getManagerId().equals(restaurant.restaurantManagerId)) {
+                manager = restaurantManager;
+                break;
+            }
+        }
 
-        if (manager == null) {
+        if(manager == null) {
             return "Manager not found.";
         }
 
@@ -58,8 +65,8 @@ public class Restaurant {
 
 
    public String update(Restaurant restaurant) {
-    for (int i=0; i<restaurantList.size(); i++) {
-        if (restaurantList.get(i).restaurantId == restaurant.restaurantId) {
+    for(int i=0; i<restaurantList.size(); i++) {
+        if(restaurantList.get(i).restaurantId == restaurant.restaurantId) {
             restaurantList.set(i, restaurant);
             return "updated";
         }
@@ -67,10 +74,11 @@ public class Restaurant {
     return "Not found";
 }
 
-    public  String delete(long id){
-         for(Restaurant restaurant: restaurantList){
+   public  String delete(long id){
+         for(int i = 0; i < restaurantList.size(); i++){
+            Restaurant restaurant = restaurantList.get(i);
             if(restaurant.restaurantId==id){
-                restaurantList.remove(id);
+                restaurantList.remove(i);
                 return "deleted"; 
             }
         }
@@ -122,3 +130,4 @@ public class Restaurant {
         return orderList;
     }
 }
+

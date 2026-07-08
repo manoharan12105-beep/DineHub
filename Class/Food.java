@@ -52,8 +52,8 @@ public class Food {
 
 
    public String update(Food food) {
-    for (int i=0; i<foodList.size(); i++) {
-        if (foodList.get(i).foodId == food.foodId) {
+    for(int i=0; i<foodList.size(); i++) {
+        if(foodList.get(i).foodId == food.foodId) {
             foodList.set(i, food);
             return "updated food details";
         }
@@ -62,8 +62,8 @@ public class Food {
 }
 
     public  String delete(long id){
-         for (int i = 0; i < foodList.size(); i++) {
-            if (foodList.get(i).foodId.equals(id)) {
+         for(int i = 0; i < foodList.size(); i++) {
+            if(foodList.get(i).foodId.equals(id)) {
                 foodList.remove(i);
                 return "deleted food";
             }
@@ -72,8 +72,8 @@ public class Food {
     }
 
     public String updateAvailability(boolean availability,Long foodId){
-        for (int i=0; i<foodList.size(); i++) {
-        if (foodList.get(i).foodId == foodId) {
+        for(int i=0; i<foodList.size(); i++) {
+        if(foodList.get(i).foodId == foodId) {
            foodList.get(i).availability = availability;
             return "updated Successfully";
         }
@@ -82,8 +82,8 @@ public class Food {
     }
 
     public String updatePrice(Double price,Long foodId){
-        for (int i=0; i<foodList.size(); i++) {
-        if (foodList.get(i).foodId == foodId) {
+        for(int i=0; i<foodList.size(); i++) {
+        if(foodList.get(i).foodId == foodId) {
            foodList.get(i).price = price;
             return "updated Successfully";
         }

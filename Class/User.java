@@ -58,7 +58,7 @@ public class User {
         Customer customer = new Customer(customerList, cityMap);
 
         
-        if (!customer.create(customerId, newUser)) {
+        if(!customer.create(customerId, newUser)) {
             System.out.println("Customer registration failed!");
             return false;
         }
@@ -82,7 +82,7 @@ public class User {
    * @return
    */
   public UserResponse login(String email, String password) {
-    for (User u : userList) {
+    for(User u : userList) {
         if(email.equals(u.getEmail()) && password.equals(u.getPassword())) {
             return new UserResponse(u.getId(), u.getUsername(), u.getEmail(), u.getRole(), u.getCreatedAt());
         }
@@ -208,3 +208,4 @@ public class User {
   }
 
 }
+

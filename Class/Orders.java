@@ -43,8 +43,8 @@ public class Orders {
 
 
    public String update(Orders orders) {
-    for (int i=0; i<orderList.size(); i++) {
-        if (orderList.get(i).orderId == orders.orderId) {
+    for(int i=0; i<orderList.size(); i++) {
+        if(orderList.get(i).orderId == orders.orderId) {
             orderList.set(i, orders);
             return "updated order details";
         }
@@ -53,8 +53,8 @@ public class Orders {
 }
 
     public String delete(Long id){
-         for (int i = 0; i < orderList.size(); i++) {
-            if (orderList.get(i).orderId.equals(id)) {
+         for(int i = 0; i < orderList.size(); i++) {
+            if(orderList.get(i).orderId.equals(id)) {
                 orderList.remove(i);
                 return "deleted order";
             }
@@ -124,3 +124,4 @@ public class Orders {
 
 
 }
+

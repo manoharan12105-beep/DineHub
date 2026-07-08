@@ -1,13 +1,15 @@
 package Class;
 
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
+import enums.Role;
 import enums.Status;
 
 public class DeliveryPerson {
     private Long deliverpersonId;
+    private Long userId;
     private String name;
     private String phoneNo;
     private String email;
@@ -21,6 +23,7 @@ public class DeliveryPerson {
 
     public DeliveryPerson(List<DeliveryPerson> deliveryPersonList) {
         this.deliveryPersonList = deliveryPersonList;
+        this.deliveryList = new ArrayList<>();
     }
 
     public DeliveryPerson(List<DeliveryPerson> deliveryPersonList, Long deliverpersonId, String name,String phoneNo, String email, int age, String gender){
@@ -33,9 +36,25 @@ public class DeliveryPerson {
         this.gender=gender;
         this.status=Status.AVAILABLE;
         this.joinDate=LocalDateTime.now();
+        this.deliveryList = new ArrayList<>();
     }
 
     public String create(DeliveryPerson deliveryPerson){
+       deliveryPersonList.add(deliveryPerson);
+       return "Delivery person as Added";
+    }
+
+    public String create(DeliveryPerson deliveryPerson, long userId, String email, String password, List<User> userList){
+       deliveryPerson.userId = userId;
+
+       User user = new User(userList);
+       user.setId(userId);
+       user.setUsername(deliveryPerson.getName());
+       user.setEmail(email);
+       user.setPassword(password);
+       user.setRole(Role.DELIVERY_PERSON);
+
+       userList.add(user);
        deliveryPersonList.add(deliveryPerson);
        return "Delivery person as Added";
     }
@@ -52,8 +71,8 @@ public class DeliveryPerson {
 
 
    public String update(DeliveryPerson deliveryPerson) {
-    for (int i=0; i<deliveryPersonList.size(); i++) {
-        if (deliveryPersonList.get(i).deliverpersonId.equals(deliveryPerson.deliverpersonId)) {
+    for(int i=0; i<deliveryPersonList.size(); i++) {
+        if(deliveryPersonList.get(i).deliverpersonId.equals(deliveryPerson.deliverpersonId)) {
             deliveryPersonList.set(i, deliveryPerson);
             return "updated Delivery person details";
         }
@@ -62,8 +81,8 @@ public class DeliveryPerson {
 }
 
     public  String delete(Long id){
-        for (int i = 0; i < deliveryPersonList.size(); i++) {
-            if (deliveryPersonList.get(i).deliverpersonId.equals(id)) {
+        for(int i = 0; i < deliveryPersonList.size(); i++) {
+            if(deliveryPersonList.get(i).deliverpersonId.equals(id)) {
                 deliveryPersonList.remove(i);
                 return "deleted account";
             }
@@ -73,6 +92,9 @@ public class DeliveryPerson {
 
 
     public boolean acceptDelivery(Delivery delivery){
+      if(deliveryList == null) {
+        deliveryList = new ArrayList<>();
+      }
       deliveryList.add(delivery);
       return true;
     }
@@ -88,6 +110,10 @@ public class DeliveryPerson {
 
     public Long getDeliverpersonId() {
         return deliverpersonId;
+    }
+
+    public Long getUserId() {
+        return userId;
     }
 
     public String getName() {
@@ -126,6 +152,11 @@ public class DeliveryPerson {
         return deliveryList;
     }
 
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
 
     
 }
+

@@ -57,8 +57,8 @@ public class RestaurantManager {
     }
 
     public String update(RestaurantManager restaurantManager) {
-    for (int i=0; i<managerList.size(); i++) {
-        if (managerList.get(i).managerId == restaurantManager.managerId) {
+    for(int i=0; i<managerList.size(); i++) {
+        if(managerList.get(i).managerId == restaurantManager.managerId) {
             managerList.set(i, restaurantManager);
             return "updated";
         }
@@ -67,8 +67,8 @@ public class RestaurantManager {
 
 }
     public  String delete(Long id){
-        for (int i = 0; i < managerList.size(); i++) {
-        if (managerList.get(i).managerId.equals(id)) {
+        for(int i = 0; i < managerList.size(); i++) {
+        if(managerList.get(i).managerId.equals(id)) {
                 managerList.remove(i);
                 return "deleted";
             }
@@ -82,8 +82,8 @@ public class RestaurantManager {
     }
 
     public String updateFood(Food food) {
-    for (int i=0; i<foodList.size(); i++) {
-        if (foodList.get(i).foodId.equals(food.foodId)) {
+    for(int i=0; i<foodList.size(); i++) {
+        if(foodList.get(i).foodId.equals(food.foodId)) {
             foodList.set(i, food);
             return "updated";
         }
@@ -93,7 +93,7 @@ public class RestaurantManager {
 
 
     public  String deleteFood(Long id){
-    for (int i = 0; i < foodList.size(); i++) {
+    for(int i = 0; i < foodList.size(); i++) {
             if(foodList.get(i).foodId.equals(id)) {
                 foodList.remove(i);
                 return "deleted"; 

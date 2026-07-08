@@ -7,14 +7,16 @@ import enums.Status;
 
 public class Delivery {
   private Long deliveryId;
+  private Long orderId;
   private Status status;
   private LocalDateTime deliveredAt;
 
   List<Delivery> deliveryList;
 
-  public Delivery(List<Delivery> deliveryList,Long deliveryId, Status status){
+  public Delivery(List<Delivery> deliveryList, Long deliveryId, Long orderId, Status status){
     this.deliveryList=deliveryList;
-    this. deliveryId=deliveryId;
+    this.deliveryId=deliveryId;
+    this.orderId=orderId;
     this.status=status;
     this.deliveredAt=LocalDateTime.now();
   }
@@ -36,8 +38,8 @@ public class Delivery {
 
 
   public String update(Delivery delivery) {
-  for (int i=0; i<deliveryList.size(); i++) {
-      if (deliveryList.get(i).deliveryId == delivery.deliveryId) {
+  for(int i=0; i<deliveryList.size(); i++) {
+      if(deliveryList.get(i).deliveryId == delivery.deliveryId) {
           deliveryList.set(i, delivery);
           return "updated delivery details";
       }
@@ -46,8 +48,8 @@ public class Delivery {
 }
 
   public  String delete(long id){
-        for (int i = 0; i < deliveryList.size(); i++) {
-          if (deliveryList.get(i).deliveryId.equals(id)) {
+        for(int i = 0; i < deliveryList.size(); i++) {
+          if(deliveryList.get(i).deliveryId.equals(id)) {
               deliveryList.remove(i);
               return "deleted";
           }
@@ -68,8 +70,16 @@ public class Delivery {
       return deliveryId;
   }
 
+  public Long getOrderId() {
+      return orderId;
+  }
+
   public Status getStatus() {
       return status;
+  }
+
+  public void setStatus(Status status) {
+      this.status = status;
   }
 
   public LocalDateTime getDeliveredAt() {
@@ -84,3 +94,4 @@ public class Delivery {
 
 
   }
+

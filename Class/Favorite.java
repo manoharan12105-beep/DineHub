@@ -36,8 +36,8 @@ public class Favorite {
     }
 
        public String update(Favorite favorite) {
-    for (int i=0; i<favoriteList.size(); i++) {
-        if (favoriteList.get(i).favId == favorite.favId) {
+    for(int i=0; i<favoriteList.size(); i++) {
+        if(favoriteList.get(i).favId == favorite.favId) {
             favoriteList.set(i, favorite);
             return "updated food details";
         }
@@ -46,8 +46,8 @@ public class Favorite {
 }
 
     public  String delete(long id){
-         for (int i = 0; i < favoriteList.size(); i++) {
-            if (favoriteList.get(i).favId.equals(id)) {
+         for(int i = 0; i < favoriteList.size(); i++) {
+            if(favoriteList.get(i).favId.equals(id)) {
                 favoriteList.remove(i);
                 return "deleted food";
             }
@@ -80,3 +80,4 @@ public class Favorite {
     }
 
 }
+

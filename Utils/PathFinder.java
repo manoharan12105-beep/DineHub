@@ -59,12 +59,12 @@ public class PathFinder {
   private List<Cell> buildPath(Cell[][] parent, boolean[][] visited, Cell destination) {
     List<Cell> path = new ArrayList<>();
 
-    if (!visited[destination.row][destination.col])
+    if(!visited[destination.row][destination.col])
       return path;
 
     Cell current = destination;
 
-    while (current != null) {
+    while(current != null) {
       path.add(current);
       current = parent[current.row][current.col];
     }
@@ -75,14 +75,14 @@ public class PathFinder {
   }
 
   public void printPath(List<Cell> path) {
-    if (path.isEmpty()) {
+    if(path.isEmpty()) {
       System.out.println("No Path Found.");
       return;
     }
 
     System.out.println("Shortest Path:");
 
-    for (Cell cell : path) {
+    for(Cell cell : path) {
       System.out.print(cell + " ");
     }
 
