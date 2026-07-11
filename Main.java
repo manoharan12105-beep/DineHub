@@ -1593,11 +1593,11 @@ public class Main {
     System.out.println("===================================");
 
     while(true) {
-      System.out.println(userList.toString());
-      System.out.println(adminList.toString());
-      System.out.println(customerList.toString());
-      System.out.println(managerList.toString());
-      System.out.println(restaurantList.toString());
+      // System.out.println(userList.toString());
+      // System.out.println(adminList.toString());
+      // System.out.println(customerList.toString());
+      // System.out.println(managerList.toString());
+      // System.out.println(restaurantList.toString());
 
       System.out.println();
       System.out.println("1.Register");
@@ -1633,7 +1633,7 @@ public class Main {
             System.out.println();
             System.out.println("Registered [Name : " + username + ", Role : CUSTOMER]" );
           } else {
-            System.out.println("Register Failed...");;
+            System.out.println("Register Failed...");
           }
 
           displayCityMap();
