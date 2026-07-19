@@ -1593,12 +1593,6 @@ public class Main {
     System.out.println("===================================");
 
     while(true) {
-      // System.out.println(userList.toString());
-      // System.out.println(adminList.toString());
-      // System.out.println(customerList.toString());
-      // System.out.println(managerList.toString());
-      // System.out.println(restaurantList.toString());
-
       System.out.println();
       System.out.println("1.Register");
       System.out.println("2.Login");
